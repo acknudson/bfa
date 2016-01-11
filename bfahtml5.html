@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<body>
+<canvas id="img_demo_canvas" width="850" height="640">Alternative text if browser doesn't support canvas.</canvas>
+
+<style>
+#img_demo_canvas {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    /*border: 1px solid #000000;*/
+    width: 850px;
+}
+</style>
+
+<script type="text/javascript">
+  var canvas;
+  var ctx;
+   
+  var background;
+  var width = 400;
+  var height = 640;
+
+
+   
+  var img;
+  var img_y;
+   
+  function update(){
+    img_y -= 0.3;
+    if (img_y < -img.height) {
+      img_y = height;
+    }
+  }
+   
+  function draw() {
+    ctx.drawImage(background,0,0);
+    ctx.drawImage(img, 0, img_y);
+  }
+   
+  function main_loop() {
+    draw();
+    update();
+  }
+  
+  function init() {
+    canvas = document.getElementById("img_demo_canvas");
+    width = canvas.width;
+    height = canvas.height;
+    ctx = canvas.getContext("2d");
+   
+    // init background 
+    background = new Image();
+    background.src = 'bfa-white.png';
+   
+    // init img
+    img = new Image();
+    img.src = 'cat4.jpg'; //can be a web address
+    img.onload = function(){
+      img_y = -img.height;
+    };
+   
+    return setInterval(main_loop, 10);
+  }
+
+  // alert("Hello Aubrey!");
+  init();
+</script>
+
+
+</body>

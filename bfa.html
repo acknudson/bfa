@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<style>
+* {margin: 0; padding: 0;}
+
+body {
+    <!-- src: http://subtlepatterns.com/?p=1045 -->
+    background: url('dark_geometric.png');
+}
+
+#container {
+    width: 1000px;
+    height: 750px;
+    overflow: hidden;
+    margin: 50px auto;
+    background: white;
+}
+
+/*header*/
+header {
+    width: 800px;
+    margin: 40px auto;
+}
+
+header h1 {
+    text-align: center;
+    font: 100 60px/1.5 Helvetica, Verdana, sans-serif;
+    
+}
+
+header p {
+    font: 100 15px/1.5 Helvetica, Verdana, sans-serif;
+    text-align: justify;
+}
+
+/*photobanner*/
+
+.photobanner {
+    height: 233px;
+    width: 3550px;
+    margin-bottom: 80px;
+}
+
+/*keyframe animations*/
+.first {
+    -webkit-animation: bannermove 30s linear infinite;
+       -moz-animation: bannermove 30s linear infinite;
+        -ms-animation: bannermove 30s linear infinite;
+         -o-animation: bannermove 30s linear infinite;
+            animation: bannermove 30s linear infinite;
+}
+
+@keyframes "bannermove" {
+/* 0% {
+    margin-left: 0px;
+ }
+ 100% {
+    margin-left: -2125px;
+ }*/
+0% { 
+    transform: translateY(-40px); 
+    opacity: 0;
+}
+100% { 
+    transform: translateY(0px);  
+    opacity: 1;
+}
+
+}
+
+/*@-moz-keyframes bannermove {*/
+/* 0% {
+    margin-left: 0px;
+ }
+ 100% {
+    margin-left: -2125px;
+ }*/
+/* 0% { 
+        transform: translateY(-40px); 
+        opacity: 0;
+    }
+    100% { 
+        transform: translateY(0px);  
+        opacity: 1;
+    }
+
+}*/
+
+@-webkit-keyframes "bannermove" {
+ 0% {
+    margin-left: 0px;
+ }
+ 100% {
+    margin-left: -2125px;
+ }
+/* 0% { 
+        transform: translateY(-40px); 
+        opacity: 0;
+    }
+    100% { 
+        transform: translateY(0px);  
+        opacity: 1;
+    }
+
+}*/
+
+/*@-ms-keyframes "bannermove" {*/
+/* 0% {
+    margin-left: 0px;
+ }
+ 100% {
+    margin-left: -2125px;
+ }*/
+/* 0% { 
+        transform: translateY(-40px); 
+        opacity: 0;
+    }
+    100% { 
+        transform: translateY(0px);  
+        opacity: 1;
+    }
+
+}
+*/
+/*@-o-keyframes "bannermove" {*/
+/* 0% {
+    margin-left: 0px;
+ }
+ 100% {
+    margin-left: -2125px;
+ }*/
+ 
+
+/*}*/
+</style>
+
+<div id="container">
+    <header>
+     <h1>Andrew's project</h1>
+     <p>SO MUCH FUN</p>
+    </header>
+    
+    <!-- Each image is 350px by 233px -->
+    <div class="photobanner">
+     <img class="first" src="http://all-that-is-interesting.com/wordpress/wp-content/uploads/2011/11/america-map-by-mcdonalds-locations.png" alt="" />
+     <img src="http://i.imgur.com/GGGuF.jpg" alt="" />
+     <img src="http://all-that-is-interesting.com/wordpress/wp-content/uploads/2013/09/interesting-pictures-end-of-the-earth.jpg" alt="" />
+     <img src="https://all-that-is-interesting.com/wordpress/wp-content/uploads/2013/09/interesting-pictures-1960s-afghanistan.jpg" alt="" />
+     <img src="https://all-that-is-interesting.com/wordpress/wp-content/uploads/2013/09/interesting-pictures-grand-teton.jpg" alt="" />
+     <img src="https://all-that-is-interesting.com/wordpress/wp-content/uploads/2013/09/interesting-pictures-blizka-monument-bulgaria.jpg" alt="" />
+     <img src="http://all-that-is-interesting.com/wordpress/wp-content/uploads/2011/11/america-map-by-mcdonalds-locations.png" alt="" />
+    </div>
+</div>
+
