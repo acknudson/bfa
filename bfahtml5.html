@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 
+<!-- Original source code from http://silveiraneto.net/2011/06/02/simple-html5-animation-clouds-over-background/ -->
+
 <body>
 <canvas id="img_demo_canvas" width="850" height="640">Alternative text if browser doesn't support canvas.</canvas>
 
@@ -28,21 +30,20 @@
   var img;
   var img_y;
    
-  function update(){
+  function updateDraw() {
     img_y -= 0.3;
     if (img_y < -img.height) {
-      img_y = height;
+      img_y = height - img.height;
+    }
+    ctx.drawImage(background,0,0);
+    ctx.drawImage(img, 0, img_y);
+    if (img_y <= 0) {
+      ctx.drawImage(img, 0, height+img_y);
     }
   }
    
-  function draw() {
-    ctx.drawImage(background,0,0);
-    ctx.drawImage(img, 0, img_y);
-  }
-   
   function main_loop() {
-    draw();
-    update();
+    updateDraw();
   }
   
   function init() {
@@ -65,7 +66,6 @@
     return setInterval(main_loop, 10);
   }
 
-  // alert("Hello Aubrey!");
   init();
 </script>
 
