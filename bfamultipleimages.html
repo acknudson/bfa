@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<!-- Original source code from http://silveiraneto.net/2011/06/02/simple-html5-animation-clouds-over-background/ -->
+
+<body>
+<canvas id="img_demo_canvas" width="850" height="640">Alternative text if browser doesn't support canvas.</canvas>
+
+<style>
+#img_demo_canvas {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    /*border: 1px solid #000000;*/
+    width: 850px;
+}
+</style>
+
+<script type="text/javascript">
+  var canvas;
+  var ctx;
+   
+  var background;
+  var width = 400;
+  var height = 640;
+
+
+  //create image variables
+  var img;
+  var img_y;
+
+  var img2;
+  var img2_y;
+
+  var img3;
+  var img3_y;
+   
+  function updateDraw() {
+    //set speed of images
+    img_y -= 0.3;
+    img2_y -= 0.8;
+    img3_y -= 0.5;
+
+    //reset to the bottom of the screen, if whole image has gone over the top
+    if (img_y < -img.height) {
+      img_y = height - img.height;
+    }
+    if (img2_y < -img2.height) {
+      img2_y = height - img2.height;
+    }
+    if (img3_y < -img3.height) {
+      img3_y = height - img3.height;
+    }
+
+    //draw the images and the white background on the canvas at each frame
+    ctx.drawImage(background,0,0);
+    ctx.drawImage(img, 0, img_y);
+    ctx.drawImage(img2, 0, img2_y);
+    ctx.drawImage(img3, img.width + 5, img3_y);
+
+    // start looping at the bottom if image has started going off the top
+    if (img_y <= 0) {
+      ctx.drawImage(img, 0, height+img_y);
+    }
+    if (img2_y <= 0) {
+      ctx.drawImage(img2, 0, height+img2_y);
+    }
+    if (img3_y <= 0) {
+      ctx.drawImage(img3, img.width + 5, height+img3_y);
+    }
+  }
+   
+  function main_loop() {
+    updateDraw();
+  }
+  
+  function init() {
+    canvas = document.getElementById("img_demo_canvas");
+    width = canvas.width;
+    height = canvas.height;
+    ctx = canvas.getContext("2d");
+   
+    // init background 
+    background = new Image();
+    background.src = 'bfa-white.png';
+   
+    // init images
+    img = new Image();
+    img.src = 'chinatown.jpg'; //can be a web address
+    img.onload = function(){
+      img_y = -img.height;
+    };
+
+    img2 = new Image();
+    img2.src = 'cat4.jpg';
+    img2.onload = function() {
+      img2_y = -img2.height;
+    }
+
+    img3 = new Image();
+    img3.src = 'tswift.png';
+    img3.onload = function() {
+      img3_y = -img3.height;
+    }
+
+    //init the main loop and set the frame rate
+    return setInterval(main_loop, 10);
+  }
+
+  init();
+</script>
+
+
+</body>
