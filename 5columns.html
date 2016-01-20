@@ -3,11 +3,7 @@
 <!-- Original source code from http://silveiraneto.net/2011/06/02/simple-html5-animation-clouds-over-background/ -->
 
 <body>
-<canvas class="demo_canvas" id="img_canvas1" width="150" height="640">Alternative text if browser doesn't support canvas.</canvas>
-<canvas class="demo_canvas" id="img_canvas2" width="150" height="640">Alternative text if browser doesn't support canvas.</canvas>
-<canvas class="demo_canvas" id="img_canvas3" width="150" height="640">Alternative text if browser doesn't support canvas.</canvas>
-<canvas class="demo_canvas" id="img_canvas4" width="150" height="640">Alternative text if browser doesn't support canvas.</canvas>
-<canvas class="demo_canvas" id="img_canvas5" width="150" height="640">Alternative text if browser doesn't support canvas.</canvas>
+<canvas class="demo_canvas" id="img_canvas" width="850" height="640">Alternative text if browser doesn't support canvas.</canvas>
 
 <style>
 .demo_canvas {
@@ -17,32 +13,40 @@
   margin-right: auto;
   display: inline-block;
   /*border: 1px solid #000000;*/
-  width: 150px;
+  width: 850px;
 }
 </style>
 
 <script type="text/javascript">
-  var canvas1;
-  var ctx1;
-  var canvas2;
-  var ctx2;
-  var canvas3;
-  var ctx3;
-  var canvas4;
-  var ctx4;
-  var canvas5;
-  var ctx5;
-
-  var contexts;
-  var speeds = [1, 2, 0.6, 0.2, 1.4];
+  var canvas;
+  var ctx;
    
   var background;
   var width = 150;
   var height = 640;
 
-  var imageNames = ["0.jpg", "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg"]; //put all of the images names here
+  //put all of the images names here
+  var col1images = ["0.jpg", "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg","6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg"]; 
+  var col2images = ["0.jpg", "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg","6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg"];
+  var col3images = ["0.jpg", "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg","6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg"];
+  var col4images = ["0.jpg", "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg","6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg"];
+  var col5images = ["0.jpg", "1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg","6.jpg", "7.jpg", "8.jpg", "9.jpg", "10.jpg"];
+  var allimages = [col1images, col2images, col3images, col4images, col5images];
 
-  var allImages = [];
+
+  var c1images = [];
+  var c2images = [];
+  var c3images = [];
+  var c4images = [];
+  var c5images = [];
+  var allcolumns = [c1images, c2images, c3images, c4images, c5images];
+
+  var c1ys = [];
+  var c2ys = [];
+  var c3ys = [];
+  var c4ys = [];
+  var c5ys = [];
+  var allys = [c1ys, c2ys, c3ys, c4ys, c5ys];
 
   //http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
   function shuffle(array) {
@@ -66,66 +70,36 @@
    
   function updateDraw() {
     //set speed of images
-    //var speed = Math.random() * 0.5;//2;
+    var speed1 = 1;
+    var speed2 = 0.5;
+    var speed3 = 0.8; 
+    var speed4 = 1.5;
+    var speed5 = 0.6;
+    var allSpeeds = [speed1, speed2, speed3, speed4, speed5];
 
-    //define all of the heights of the images the first time this is called
-    if (allImages[0].height === undefined) {
-      for (var i = 0; i < allImages.length; i++) {
-        var img = allImages[i];
-        img.height = img.image.height + 5; //5px margin between images
-        if (i > 0) {
-          img.y = allImages[i-1].y + allImages[i-1].height;
+    //draw the first image and the white background on the canvas at each frame
+    ctx.drawImage(background,0,0);
+
+
+    //draw the image on the canvas
+    for (var i = 0; i < allcolumns.length; i++) { //i = col number
+      for (var j = 0; j < allcolumns[i].length; j++) { //j = row number
+        allys[i][j] -= allSpeeds[i]; //this is how it moves, we just decrement the starting y by the speed amount
+        ctx.drawImage(allcolumns[i][j], i*150 + 5*i, allys[i][j]);
+
+        //reset to the bottom of the screen if it's popped off the screen
+        if (allys[i][j] < -allcolumns[i][j].height) {
+          var index = j-1;
+          if (index < 0) {
+            index = allys[i].length - 1;
+          }
+          var previmg = allcolumns[i][index];
+          var prevY = allys[i][index];
+          allys[i][j] = prevY + previmg.height + 5;
         }
       }
     }
 
-    for (var j = 0; j < contexts.length; j++) {
-      var ctx = contexts[j];
-      var speed = speeds[j];
-      // console.log("j", j);
-      // shuffle(allImages);
-      // randomization code, for choosing a random picture
-      // var max = 6;
-      // var min = 0;
-      // var col0order = Math.floor((Math.random() * (max - min) + min));
-
-
-      //draw the first image and the white background on the canvas at each frame
-      ctx.drawImage(background,0,0);
-      var firstimg = allImages[0];
-      firstimg.y -= speed;
-      // console.log("firsty", firstimg.y);
-      ctx.drawImage(firstimg.image, 0, firstimg.y);
-
-      //draw the rest of the images, based on the first image's movement
-      for (var i = 1; i < allImages.length; i++) {
-        var img = allImages[i];
-        var prevImg = allImages[i-1];
-
-        img.y  = prevImg.y + prevImg.height;
-        // console.log("i, new_y", i, img.y);
-        ctx.drawImage(img.image, 0, img.y);
-
-      }
-      // reset to the bottom of the screen
-      var lastimg = allImages[allImages.length-1];
-      // console.log("lastimg", lastimg.y);
-      if (lastimg.y < -lastimg.height) {//height - lastimg.height) { //last image in the sequence's y is less than the canvas height
-        //reset the first image in the sequence to be last image + height
-        shuffle(allImages); //randomize order
-        allImages[0].y = height;
-      }
-    }
-
-
-    //could create a column of 10 images (for example)
-    //and then every time we get to the end, we create a new order for the 10 imgs
-
-    //probably want a little bit of a margin between tops and bottoms of images
-    //right now, this code feels like it's too object oriented to do what I want it to do
-    //I have an object for each image. I need to create a loop somehow. For the images that we're going to display and move and loop.
-    //maybe once he sends me the images, I can figure out how many of them can fit on the canvas
-    //which is a little scary because he wants to make it REALLY long. 
   }
    
   function main_loop() {
@@ -133,44 +107,41 @@
   }
   
   function init() {
-    canvas1 = document.getElementById("img_canvas1");
-    ctx1 = canvas1.getContext("2d");
-    width = canvas1.width;
-    height = canvas1.height;
-    
-    canvas2 = document.getElementById("img_canvas2");
-    ctx2 = canvas2.getContext("2d");
-    canvas3 = document.getElementById("img_canvas3");
-    ctx3 = canvas3.getContext("2d");
-    canvas4 = document.getElementById("img_canvas4");
-    ctx4 = canvas4.getContext("2d");
-    canvas5 = document.getElementById("img_canvas5");
-    ctx5 = canvas5.getContext("2d");
-
-    contexts = [ctx1, ctx2, ctx3, ctx4, ctx5];
-    console.log("contexts", contexts);
+    canvas = document.getElementById("img_canvas");
+    ctx = canvas.getContext("2d");
+    width = canvas.width;
+    height = canvas.height;
    
     // init background 
     background = new Image();
     background.src = 'bfa-white.png';
 
     //init image array & all Images()
-    for (var i = 0; i < imageNames.length; i++) {
-      var picture = new Object();
-      picture["height"] = undefined;
-      picture["y"] = height;
-      picture["image"] = new Image();
-      picture.image.src = imageNames[i];
-      allImages.push(picture);
-
+    for (var i = 0; i < allimages.length; i++) {
+      //shuffle the images so they'll be in a slightly different order
+      shuffle(allimages[i]);
+      for (var j = 0; j < allimages[i].length; j++) {
+        allcolumns[i].push(new Image());
+        allcolumns[i][j].src = allimages[i][j];
+      }
     }
 
-    // console.log("allimages", allImages);
+    // console.log("allcols", allcolumns);
+    window.onload = function () {
+      for (var i = 0; i < allcolumns.length; i++) {
+        allys[i].push(height); //each col image should start at 0
+        for (var j = 1; j < allcolumns[i].length; j++) {
+          var previmg = allcolumns[i][j-1];
+          var prevY = allys[i][j-1];
+          allys[i].push(prevY + previmg.height + 5); //5px border
+        }
+      }
 
-    setTimeout(console.log("all loaded"), 10000);
+      // console.log("allys", allys);
 
-    //init the main loop and set the frame rate
-    return setInterval(main_loop, 10);
+      //init the main loop and set the frame rate
+      setInterval(main_loop, 10);
+    }
   }
 
   init();
