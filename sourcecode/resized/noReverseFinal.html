@@ -49,17 +49,17 @@ var allImageNames = ['0.jpg', '1.jpg', '10.jpg', '100.jpg', '101.jpg', '104.jpg'
   var c5ys = [];
   var c6ys = [];
   var allys = [c1ys, c2ys, c3ys, c4ys, c5ys, c6ys];
-
-  //set speed of images
-  var speed1 = 4;
-  var speed2 = 5;
-  var speed3 = -4; 
-  var speed4 = 4.5;
-  var speed5 = -5;
-  var speed6 = 3.5;
-  var allSpeeds = [speed1, speed2, speed3, speed4, speed5, speed6];
    
   function updateDraw() {
+    //set speed of images
+    var speed1 = 1;
+    var speed2 = 0.5;
+    var speed3 = 0.8; 
+    var speed4 = 1.5;
+    var speed5 = 0.6;
+    var speed6 = 0.2;
+    var allSpeeds = [speed1, speed2, speed3, speed4, speed5, speed6];
+
     //draw the first image and the white background on the canvas at each frame
     ctx.drawImage(background,0,0);
 
@@ -72,38 +72,21 @@ var allImageNames = ['0.jpg', '1.jpg', '10.jpg', '100.jpg', '101.jpg', '104.jpg'
 
         //reset to the bottom of the screen if it's popped off the screen
         // also choose a new random image in place of the image that just disappeared
-        var randomIndex;
-        if (allSpeeds[i] >= 0) {
-          if (allys[i][j] < -allColImages[i][j].height) {
-            randomIndex = Math.floor(Math.random() * allImageObjects.length);
-            // console.log('rand', randomIndex);
-            allColImages[i][j] = allImageObjects[randomIndex];
-            var index = j-1;
-            if (index < 0) {
-              index = allys[i].length - 1;
-            }
-            var previmg = allColImages[i][index];
-            var prevY = allys[i][index];
-            allys[i][j] = prevY + previmg.height + 5;
+        if (allys[i][j] < -allColImages[i][j].height) {
+          var randomIndex = Math.floor(Math.random() * allImageObjects.length);
+          // console.log('rand', randomIndex);
+          allColImages[i][j] = allImageObjects[randomIndex];
+          var index = j-1;
+          if (index < 0) {
+            index = allys[i].length - 1;
           }
-        } else { //speed is negative, so column is moving down the page
-          //replace the picture and its y if it is below the height of canvas
-          var currImg;
-          var index = j+1; //of next image
-          if (index >= allys[i].length) {
-            index = 0;
-          }
-          var nextY = allys[i][index];
-          if (nextY >= 0 && nextY <= 5) { 
-          //if the next image has moved onto the screen, we want to update this image
-            randomIndex = Math.floor(Math.random() * allImageObjects.length);
-            currImg = allImageObjects[randomIndex];
-            allColImages[i][j] = currImg;
-            allys[i][j] = nextY - currImg.height - 5;
-          }
-        }   
+          var previmg = allColImages[i][index];
+          var prevY = allys[i][index];
+          allys[i][j] = prevY + previmg.height + 5;
+        }
       }
     }
+
   }
    
   function main_loop() {
@@ -126,6 +109,9 @@ var allImageNames = ['0.jpg', '1.jpg', '10.jpg', '100.jpg', '101.jpg', '104.jpg'
         allImageObjects[i].src = allImageNames[i];
     }
 
+    // console.log("allImageNames", allImageNames);
+    // console.log("allImageObjects", allImageObjects);
+
     window.onload = function () {
 
       //get min number of images for column
@@ -134,6 +120,7 @@ var allImageNames = ['0.jpg', '1.jpg', '10.jpg', '100.jpg', '101.jpg', '104.jpg'
       var randomIndex = Math.floor(Math.random() * allImageObjects.length);
       for (var i = 0; i < allColImages.length; i++) { //i = column number; iterate over the columns
         allColImages[i].push(allImageObjects[randomIndex]); //get random image
+        // console.log('rand', randomIndex);
         allys[i].push(0); //the first image in each column should start at y=0
         for (var j = 1; j < numImagesInColumn; j++) {
           randomIndex = Math.floor(Math.random() * allImageObjects.length);
@@ -141,8 +128,13 @@ var allImageNames = ['0.jpg', '1.jpg', '10.jpg', '100.jpg', '101.jpg', '104.jpg'
           var previmg = allColImages[i][j-1];
           var prevY = allys[i][j-1];
           allys[i].push(prevY + previmg.height + 5); //5px border
+          // console.log('rand', randomIndex);
         }
       }
+
+      // console.log("allColImages", allColImages);
+
+      // console.log("allys", allys);
 
       //init the main loop and set the frame rate
       setInterval(main_loop, 10);
@@ -158,6 +150,8 @@ var allImageNames = ['0.jpg', '1.jpg', '10.jpg', '100.jpg', '101.jpg', '104.jpg'
       }
     }
     numImagesInColumn = Math.ceil(height / shortest);
+    // console.log(numImagesInColumn);
+
   }
 
   init();

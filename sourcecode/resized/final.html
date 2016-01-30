@@ -1,39 +1,43 @@
 <!DOCTYPE html>
 
-<!-- Original source code from http://silveiraneto.net/2011/06/02/simple-html5-animation-clouds-over-background/ -->
+<!-- Original canvas with scrolling image source code from http://silveiraneto.net/2011/06/02/simple-html5-animation-clouds-over-background/ -->
+<!-- Significant alterations by Aubrey Colter -->
 
 <body style="background: black;">
 <canvas class="demo_canvas" id="img_canvas" width="935" height="1870">Alternative text if browser doesn't support canvas.</canvas>
 
 <style>
-#img_canvas {
-  padding-left: 0;
-  padding-right: 0;
+#img_canvas { 
+  /*center canvas on page*/
   margin-left: auto;
   margin-right: auto;
   display: block;
-  /*border: 1px solid #000000;*/
+
+  /*scale canvas width/height as desired*/
   /*width: 850px;*/
   height: 680px;
 }
 </style>
 
 <script type="text/javascript">
+  // canvas-specific variables
   var canvas;
   var ctx;
-   
   var background;
-  var width = 150;
-  var height = 640;
+  var width;
+  var height;
 
   //put all of the images names here
-var allImageNames = ['0.jpg', '1.jpg', '10.jpg', '100.jpg', '101.jpg', '104.jpg', '108.jpg', '114.jpg', '117.jpg', '12.jpg', '124.jpg', '126.jpg', '129.jpg', '13.jpg', '131.jpg', '136.jpg', '138.jpg', '139.jpg', '140.jpg', '142.jpg', '149.jpg', '15.jpg', '153.jpg', '157.jpg', '160.jpg', '175.jpg', '18.jpg', '180.jpg', '187.jpg', '192.jpg', '196.jpg', '198.jpg', '199.jpg', '2.jpg', '20.jpg', '200.jpg', '201.jpg', '202.jpg', '203.jpg', '204.jpg', '205.jpg', '206.jpg', '207.jpg', '208.jpg', '209.jpg', '21.jpg', '210.jpg', '211.jpg', '212.jpg', '213.jpg', '214.jpg', '215.jpg', '216.jpg', '217.jpg', '218.jpg', '219.jpg', '22.jpg', '220.jpg', '221.jpg', '222.jpg', '223.jpg', '224.jpg', '225.jpg', '226.jpg', '227.jpg', '228.jpg', '229.jpg', '230.jpg', '231.jpg', '232.jpg', '233.jpg', '234.jpg', '235.jpg', '236.jpg', '237.jpg', '238.jpg', '239.jpg', '24.jpg', '240.jpg', '241.jpg', '242.jpg', '243.jpg', '244.jpg', '245.jpg', '246.jpg', '247.jpg', '248.jpg', '249.jpg', '25.jpg', '250.jpg', '251.jpg', '252.jpg', '253.jpg', '254.jpg', '255.jpg', '256.jpg', '257.jpg', '258.jpg', '259.jpg', '26.jpg', '260.jpg', '261.jpg', '262.jpg', '263.jpg', '264.jpg', '265.jpg', '266.jpg', '267.jpg', '268.jpg', '269.jpg', '270.jpg', '271.jpg', '272.jpg', '273.jpg', '274.jpg', '275.jpg', '276.jpg', '277.jpg', '278.jpg', '279.jpg', '280.jpg', '281.jpg', '282.jpg', '283.jpg', '284.jpg', '285.jpg', '286.jpg', '287.jpg', '288.jpg', '289.jpg', '290.jpg', '291.jpg', '292.jpg', '293.jpg', '294.jpg', '295.jpg', '296.jpg', '297.jpg', '298.jpg', '299.jpg', '3.jpg', '300.jpg', '301.jpg', '302.jpg', '303.jpg', '304.jpg', '305.jpg', '306.jpg', '307.jpg', '308.jpg', '309.jpg', '310.jpg', '311.jpg', '312.jpg', '313.jpg', '314.jpg', '315.jpg', '316.jpg', '317.jpg', '318.jpg', '319.jpg', '32.jpg', '320.jpg', '321.jpg', '322.jpg', '323.jpg', '324.jpg', '325.jpg', '326.jpg', '327.jpg', '328.jpg', '329.jpg', '330.jpg', '331.jpg', '332.jpg', '333.jpg', '334.jpg', '335.jpg', '336.jpg', '337.jpg', '338.jpg', '339.jpg', '340.jpg', '341.jpg', '342.jpg', '343.jpg', '344.jpg', '345.jpg', '346.jpg', '347.jpg', '348.jpg', '349.jpg', '35.jpg', '350.jpg', '351.jpg', '352.jpg', '353.jpg', '354.jpg', '355.jpg', '356.jpg', '357.jpg', '358.jpg', '359.jpg', '360.jpg', '361.jpg', '362.jpg', '363.jpg', '364.jpg', '365.jpg', '366.jpg', '367.jpg', '368.jpg', '369.jpg', '370.jpg', '371.jpg', '372.jpg', '373.jpg', '374.jpg', '375.jpg', '376.jpg', '377.jpg', '378.jpg', '379.jpg', '380.jpg', '381.jpg', '382.jpg', '383.jpg', '384.jpg', '385.jpg', '386.jpg', '388.jpg', '389.jpg', '390.jpg', '392.jpg', '393.jpg', '394.jpg', '395.jpg', '396.jpg', '397.jpg', '398.jpg', '399.jpg', '4.jpg', '401.jpg', '402.jpg', '403.jpg', '404.jpg', '405.jpg', '407.jpg', '408.jpg', '409.jpg', '41.jpg', '410.jpg', '413.jpg', '414.jpg', '415.jpg', '416.jpg', '417.jpg', '419.jpg', '420.jpg', '422.jpg', '423.jpg', '424.jpg', '425.jpg', '431.jpg', '432.jpg', '433.jpg', '434.jpg', '437.jpg', '438.jpg', '439.jpg', '440.jpg', '441.jpg', '442.jpg', '443.jpg', '444.jpg', '46.jpg', '47.jpg', '5.jpg', '51.jpg', '52.jpg', '53.jpg', '54.jpg', '6.jpg', '61.jpg', '67.jpg', '69.jpg', '7.jpg', '70.jpg', '73.jpg', '75.jpg', '78.jpg', '8.jpg', '80.jpg', '82.jpg', '83.jpg', '87.jpg', '89.jpg', '9.jpg', '90.jpg', '92.jpg', '93.jpg', '99.jpg'];
+  var allImageNames = ['0.jpg', '1.jpg', '10.jpg', '100.jpg', '101.jpg', '104.jpg', '108.jpg', '114.jpg', '117.jpg', '12.jpg', '124.jpg', '126.jpg', '129.jpg', '13.jpg', '131.jpg', '136.jpg', '138.jpg', '139.jpg', '140.jpg', '142.jpg', '149.jpg', '15.jpg', '153.jpg', '157.jpg', '160.jpg', '175.jpg', '18.jpg', '180.jpg', '187.jpg', '192.jpg', '196.jpg', '198.jpg', '199.jpg', '2.jpg', '20.jpg', '200.jpg', '201.jpg', '202.jpg', '203.jpg', '204.jpg', '205.jpg', '206.jpg', '207.jpg', '208.jpg', '209.jpg', '21.jpg', '210.jpg', '211.jpg', '212.jpg', '213.jpg', '214.jpg', '215.jpg', '216.jpg', '217.jpg', '218.jpg', '219.jpg', '22.jpg', '220.jpg', '221.jpg', '222.jpg', '223.jpg', '224.jpg', '225.jpg', '226.jpg', '227.jpg', '228.jpg', '229.jpg', '230.jpg', '231.jpg', '232.jpg', '233.jpg', '234.jpg', '235.jpg', '236.jpg', '237.jpg', '238.jpg', '239.jpg', '24.jpg', '240.jpg', '241.jpg', '242.jpg', '243.jpg', '244.jpg', '245.jpg', '246.jpg', '247.jpg', '248.jpg', '249.jpg', '25.jpg', '250.jpg', '251.jpg', '252.jpg', '253.jpg', '254.jpg', '255.jpg', '256.jpg', '257.jpg', '258.jpg', '259.jpg', '26.jpg', '260.jpg', '261.jpg', '262.jpg', '263.jpg', '264.jpg', '265.jpg', '266.jpg', '267.jpg', '268.jpg', '269.jpg', '270.jpg', '271.jpg', '272.jpg', '273.jpg', '274.jpg', '275.jpg', '276.jpg', '277.jpg', '278.jpg', '279.jpg', '280.jpg', '281.jpg', '282.jpg', '283.jpg', '284.jpg', '285.jpg', '286.jpg', '287.jpg', '288.jpg', '289.jpg', '290.jpg', '291.jpg', '292.jpg', '293.jpg', '294.jpg', '295.jpg', '296.jpg', '297.jpg', '298.jpg', '299.jpg', '3.jpg', '300.jpg', '301.jpg', '302.jpg', '303.jpg', '304.jpg', '305.jpg', '306.jpg', '307.jpg', '308.jpg', '309.jpg', '310.jpg', '311.jpg', '312.jpg', '313.jpg', '314.jpg', '315.jpg', '316.jpg', '317.jpg', '318.jpg', '319.jpg', '32.jpg', '320.jpg', '321.jpg', '322.jpg', '323.jpg', '324.jpg', '325.jpg', '326.jpg', '327.jpg', '328.jpg', '329.jpg', '330.jpg', '331.jpg', '332.jpg', '333.jpg', '334.jpg', '335.jpg', '336.jpg', '337.jpg', '338.jpg', '339.jpg', '340.jpg', '341.jpg', '342.jpg', '343.jpg', '344.jpg', '345.jpg', '346.jpg', '347.jpg', '348.jpg', '349.jpg', '35.jpg', '350.jpg', '351.jpg', '352.jpg', '353.jpg', '354.jpg', '355.jpg', '356.jpg', '357.jpg', '358.jpg', '359.jpg', '360.jpg', '361.jpg', '362.jpg', '363.jpg', '364.jpg', '365.jpg', '366.jpg', '367.jpg', '368.jpg', '369.jpg', '370.jpg', '371.jpg', '372.jpg', '373.jpg', '374.jpg', '375.jpg', '376.jpg', '377.jpg', '378.jpg', '379.jpg', '380.jpg', '381.jpg', '382.jpg', '383.jpg', '384.jpg', '385.jpg', '386.jpg', '388.jpg', '389.jpg', '390.jpg', '392.jpg', '393.jpg', '394.jpg', '395.jpg', '396.jpg', '397.jpg', '398.jpg', '399.jpg', '4.jpg', '401.jpg', '402.jpg', '403.jpg', '404.jpg', '405.jpg', '407.jpg', '408.jpg', '409.jpg', '41.jpg', '410.jpg', '413.jpg', '414.jpg', '415.jpg', '416.jpg', '417.jpg', '419.jpg', '420.jpg', '422.jpg', '423.jpg', '424.jpg', '425.jpg', '431.jpg', '432.jpg', '433.jpg', '434.jpg', '437.jpg', '438.jpg', '439.jpg', '440.jpg', '441.jpg', '442.jpg', '443.jpg', '444.jpg', '46.jpg', '47.jpg', '5.jpg', '51.jpg', '52.jpg', '53.jpg', '54.jpg', '6.jpg', '61.jpg', '67.jpg', '69.jpg', '7.jpg', '70.jpg', '73.jpg', '75.jpg', '78.jpg', '8.jpg', '80.jpg', '82.jpg', '83.jpg', '87.jpg', '89.jpg', '9.jpg', '90.jpg', '92.jpg', '93.jpg', '99.jpg'];
 
 
+  // stores all of the Image() objects that hold the images listed above
   var allImageObjects = [];
 
-  var numImagesInColumn = 15;
+  // how many images we need to guarantee a column is always full on screen
+  var numImagesInColumn;
 
+  // stores all of the images objects for each column. These are updated as images move off the screen
   var c1images = [];
   var c2images = [];
   var c3images = [];
@@ -42,6 +46,7 @@ var allImageNames = ['0.jpg', '1.jpg', '10.jpg', '100.jpg', '101.jpg', '104.jpg'
   var c6images = [];
   var allColImages = [c1images, c2images, c3images, c4images, c5images, c6images];
 
+  // stores all of the Y values for each of the images in each column. These are updated at every frame, and reset when an image moves off the screen
   var c1ys = [];
   var c2ys = [];
   var c3ys = [];
@@ -49,51 +54,78 @@ var allImageNames = ['0.jpg', '1.jpg', '10.jpg', '100.jpg', '101.jpg', '104.jpg'
   var c5ys = [];
   var c6ys = [];
   var allys = [c1ys, c2ys, c3ys, c4ys, c5ys, c6ys];
-   
-  function updateDraw() {
-    //set speed of images
-    var speed1 = 1;
-    var speed2 = 0.5;
-    var speed3 = 0.8; 
-    var speed4 = 1.5;
-    var speed5 = 0.6;
-    var speed6 = 0.2;
-    var allSpeeds = [speed1, speed2, speed3, speed4, speed5, speed6];
 
-    //draw the first image and the white background on the canvas at each frame
+  //variables we use for drawing an image at the correct height
+  var previmg;
+  var prevY;
+  var currimg;
+  var randomIndex;
+  var index;
+  var randomImg;
+
+  // speeds of each column
+  var speed1 = 1;
+  var speed2 = 0.6;
+  var speed3 = -1.5; 
+  var speed4 = 0.8;
+  var speed5 = -0.4;
+  var speed6 = 0.2;
+  var allSpeeds = [speed1, speed2, speed3, speed4, speed5, speed6];
+   
+  // function called at each frame to update the position of each image
+  function updateDraw() {
+    //draw the white background on the canvas at each frame (to preserve margins)
     ctx.drawImage(background,0,0);
 
-
-    //draw the image on the canvas
+    //draw each image on the canvas
     for (var i = 0; i < allColImages.length; i++) { //i = col number
       for (var j = 0; j < allColImages[i].length; j++) { //j = row number
         allys[i][j] -= allSpeeds[i]; //this is how it moves, we just decrement the starting y by the speed amount
+        //draw the image at the new height on the canvas, including margins between columns
         ctx.drawImage(allColImages[i][j], i*150 + 5*(i+1), allys[i][j]);
 
-        //reset to the bottom of the screen if it's popped off the screen
-        // also choose a new random image in place of the image that just disappeared
-        if (allys[i][j] < -allColImages[i][j].height) {
-          var randomIndex = Math.floor(Math.random() * allImageObjects.length);
-          // console.log('rand', randomIndex);
-          allColImages[i][j] = allImageObjects[randomIndex];
-          var index = j-1;
-          if (index < 0) {
-            index = allys[i].length - 1;
+        //check to see if the image has moved off the screen
+        if (allSpeeds[i] >= 0) { //positive speed = column moving up
+          if (allys[i][j] < -allColImages[i][j].height) { //has moved off top of screen
+            // choose new random image
+            randomIndex = Math.floor(Math.random() * allImageObjects.length);
+            allColImages[i][j] = allImageObjects[randomIndex];
+            
+            // set new image y to the bottom of the column (below its previous image)
+            index = j-1;
+            if (index < 0) {
+              index = allys[i].length - 1;
+            }
+            previmg = allColImages[i][index];
+            prevY = allys[i][index];
+            allys[i][j] = prevY + previmg.height + 5; //5px margin
           }
-          var previmg = allColImages[i][index];
-          var prevY = allys[i][index];
-          allys[i][j] = prevY + previmg.height + 5;
-        }
+
+        } else { //negative speed = column moving down
+          
+          if (allys[i][j] > height) { //has moved off bottom of screen
+            // choose new random image
+            randomIndex = Math.floor(Math.random() * allImageObjects.length);
+            currimg = allImageObjects[randomIndex];
+            
+            // set new image y to the top of the column (above its previous image)
+            index = j-1;
+            if (index < 0) {
+                index = allys[i].length - 1;
+            }
+            prevY = allys[i][index];
+            allColImages[i][j] = currimg;
+            allys[i][j] = prevY - currimg.height - 5; //5px margin
+          }
+          
+        }   
       }
     }
-
-  }
-   
-  function main_loop() {
-    updateDraw();
   }
   
+  // initialization method for the page, esp. the canvas
   function init() {
+    // get canvas parameters
     canvas = document.getElementById("img_canvas");
     ctx = canvas.getContext("2d");
     width = canvas.width;
@@ -109,35 +141,47 @@ var allImageNames = ['0.jpg', '1.jpg', '10.jpg', '100.jpg', '101.jpg', '104.jpg'
         allImageObjects[i].src = allImageNames[i];
     }
 
-    // console.log("allImageNames", allImageNames);
-    // console.log("allImageObjects", allImageObjects);
-
+    // this is called after all of the Image objects have loaded their sources
     window.onload = function () {
 
       //get min number of images for column
       numImagesNeededInColumn();
+
       //put min number of random images into each of the columns
-      var randomIndex = Math.floor(Math.random() * allImageObjects.length);
       for (var i = 0; i < allColImages.length; i++) { //i = column number; iterate over the columns
-        allColImages[i].push(allImageObjects[randomIndex]); //get random image
-        // console.log('rand', randomIndex);
-        allys[i].push(0); //the first image in each column should start at y=0
+        // 0th image gets special Y
+        randomIndex = Math.floor(Math.random() * allImageObjects.length);
+        randomImg = allImageObjects[randomIndex];
+        allColImages[i].push(randomImg); // store random image
+        if (allSpeeds[i] >= 0) { // positive speed
+          allys[i].push(0); //the first image should start at y=0
+        } else { // negative speed
+          allys[i].push(height-randomImg.height); //put at the bottom of the column on the page
+        }
+        
+        // get images to fill the column
         for (var j = 1; j < numImagesInColumn; j++) {
           randomIndex = Math.floor(Math.random() * allImageObjects.length);
-          allColImages[i].push(allImageObjects[randomIndex]); //get random object
-          var previmg = allColImages[i][j-1];
-          var prevY = allys[i][j-1];
-          allys[i].push(prevY + previmg.height + 5); //5px border
-          // console.log('rand', randomIndex);
+          allColImages[i].push(allImageObjects[randomIndex]); // store random image object
+          
+          // get previous image Y for current image's height
+          prevY = allys[i][j-1];
+          if (allSpeeds[i] >= 0) {
+            // positive speed builds column from top of page to beyond bottom of page
+            // need to put below prev img, so need previmg height
+            previmg = allColImages[i][j-1]; 
+            allys[i].push(prevY + previmg.height + 5); //5px border
+          } else {
+            // negative speed has column backwards from positive speed. 0th element starts at the bottom of the screen and is built up
+            // need to put above prev img, so need currimg height
+            currimg = allColImages[i][j];
+            allys[i].push(prevY - currimg.height - 5); 
+          }
         }
       }
 
-      // console.log("allColImages", allColImages);
-
-      // console.log("allys", allys);
-
-      //init the main loop and set the frame rate
-      setInterval(main_loop, 10);
+      //init the main loop (updateDraw) and set the frame rate (refresh canvas every 10 ms)
+      setInterval(updateDraw, 10);
     }
   }
 
@@ -150,10 +194,9 @@ var allImageNames = ['0.jpg', '1.jpg', '10.jpg', '100.jpg', '101.jpg', '104.jpg'
       }
     }
     numImagesInColumn = Math.ceil(height / shortest);
-    // console.log(numImagesInColumn);
-
   }
 
+  // call init to run the code
   init();
 </script>
 
