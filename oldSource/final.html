@@ -55,18 +55,6 @@
   var c6ys = [];
   var allys = [c1ys, c2ys, c3ys, c4ys, c5ys, c6ys];
 
-  //stores the index number of each image (in the Image() arrage) in the column
-  var c1nums = [];
-  var c2nums = [];
-  var c3nums = [];
-  var c4nums = [];
-  var c5nums = [];
-  var c6nums = [];
-  var allImgNums = [c1nums, c2nums, c3nums, c4nums, c5nums, c6nums];
-
-  // "hash" table that stores the indices of allImagesObjects:true if image is in view/use
-  var imagesInView = {};
-
   //variables we use for drawing an image at the correct height
   var previmg;
   var prevY;
@@ -99,18 +87,9 @@
         //check to see if the image has moved off the screen
         if (allSpeeds[i] >= 0) { //positive speed = column moving up
           if (allys[i][j] < -allColImages[i][j].height) { //has moved off top of screen
-            // set this index to false; no longer in use
-            imagesInView[allImgNums[i][j]] = false;
             // choose new random image
             randomIndex = Math.floor(Math.random() * allImageObjects.length);
-            while (imagesInView[randomIndex]) { // keep generating random numbers if index in use
-              randomIndex = Math.floor(Math.random() * allImageObjects.length);
-            }
             allColImages[i][j] = allImageObjects[randomIndex];
-
-            // set new index in allImgNums list, and also in the hash object
-            allImgNums[i][j] = randomIndex;
-            imagesInView[randomIndex] = true;
             
             // set new image y to the bottom of the column (below its previous image)
             index = j-1;
@@ -125,15 +104,9 @@
         } else { //negative speed = column moving down
           
           if (allys[i][j] > height) { //has moved off bottom of screen
-            imagesInView[allImgNums[i][j]] = false;
             // choose new random image
             randomIndex = Math.floor(Math.random() * allImageObjects.length);
-            while (imagesInView[randomIndex]) {
-              randomIndex = Math.floor(Math.random() * allImageObjects.length);
-            }
             currimg = allImageObjects[randomIndex];
-            allImgNums[i][j] = randomIndex;
-            imagesInView[randomIndex] = true;
             
             // set new image y to the top of the column (above its previous image)
             index = j-1;
@@ -166,8 +139,6 @@
     for (var i = 0; i < allImageNames.length; i++) {
         allImageObjects.push(new Image());
         allImageObjects[i].src = allImageNames[i];
-        //initialize hash table
-        imagesInView[i] = false;
     }
 
     // this is called after all of the Image objects have loaded their sources
@@ -178,18 +149,10 @@
 
       //put min number of random images into each of the columns
       for (var i = 0; i < allColImages.length; i++) { //i = column number; iterate over the columns
-        // generate 0th image for each column
+        // 0th image gets special Y
         randomIndex = Math.floor(Math.random() * allImageObjects.length);
-        while (imagesInView[randomIndex]) {
-          randomIndex = Math.floor(Math.random() * allImageObjects.length);
-        }
-        g
         randomImg = allImageObjects[randomIndex];
         allColImages[i].push(randomImg); // store random image
-        allImgNums[i].push(randomIndex);
-        imagesInView[randomIndex] = true; // mark image in use
-
-        // 0th image gets special Y
         if (allSpeeds[i] >= 0) { // positive speed
           allys[i].push(0); //the first image should start at y=0
         } else { // negative speed
@@ -199,12 +162,8 @@
         // get images to fill the column
         for (var j = 1; j < numImagesInColumn; j++) {
           randomIndex = Math.floor(Math.random() * allImageObjects.length);
-          while (imagesInView[randomIndex]) { // keep generating random numbers if index in use
-            randomIndex = Math.floor(Math.random() * allImageObjects.length);
-          }
           allColImages[i].push(allImageObjects[randomIndex]); // store random image object
-          allImgNums[i].push(randomIndex);
-          imagesInView[randomIndex] = true;
+          
           // get previous image Y for current image's height
           prevY = allys[i][j-1];
           if (allSpeeds[i] >= 0) {
